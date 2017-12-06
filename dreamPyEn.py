@@ -75,10 +75,10 @@ class FileListener(StreamListener):
 # Al lanzarlo como script
 if __name__ == '__main__':
  
-    consumer_key = 'n9j2KmkV3FFWkzgGeq4XdPWCp'
-    consumer_secret = 'TszufpKDVtR9rkEkfBS8SdljhqMuxO26ohnUqqDjfTNk2xvJrx'
-    access_token = '367437965-UHlGKsxK2WfYNptu2tOPBgT7jxgFvSwJ5fuS59C3'
-    access_token_secret = 'qYJQdSzBfdNMPllmA5jU5xJAuyTGxzEs6G7uKRoENRsSu'
+    consumer_key = 
+    consumer_secret = 
+    access_token = 
+    access_token_secret =
     output_directory = 'tweetsEn'
     if not os.path.isdir('log'):
         os.makedirs('log')
