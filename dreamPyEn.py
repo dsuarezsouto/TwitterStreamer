@@ -10,6 +10,8 @@ import time
 import os
 
 class FileListener(StreamListener):
+
+   
     # Constructor
     def __init__(self, path, restart_time):
         self.path = path
@@ -17,6 +19,7 @@ class FileListener(StreamListener):
         self.restart_time = restart_time
         self.file_start_time = time.time()
         self.file_start_date = datetime.datetime.now()
+        self.firstTweet = False
 
     # Me llegan los datos de un tweet
     def on_data(self, data):
@@ -32,9 +35,13 @@ class FileListener(StreamListener):
             self.file_start_date = datetime.datetime.now()
         # Escribo los datos en el fichero
         if data.startswith('{'):
+            if not self.firstTweet:
+                self.current_file.write(',')
             self.current_file.write(data)
+            self.firstTweet=False
             if not data.endswith('\n'):
                 self.current_file.write('\n')
+
 
     def on_error(self, status_code):
         # Error 420: Rate Limited -> We want disconnect
@@ -46,6 +53,7 @@ class FileListener(StreamListener):
 
     def startFile(self):
         if self.current_file:
+            self.current_file.write(']}')
             self.current_file.close()
 
         local_time_obj = localtime()
@@ -67,7 +75,9 @@ class FileListener(StreamListener):
         filename = os.path.join(full_path, '%s.json' % datetime)
         #self.current_file = gzip.open(filename, 'w')
         self.current_file = open(filename,'w')
+        self.current_file.write('{"tweets":[')
         self.file_start_time = time.time()
+        self.firstTweet=True
         logger.info('Starting new file: %s' % filename)
 
 
@@ -75,10 +85,10 @@ class FileListener(StreamListener):
 # Al lanzarlo como script
 if __name__ == '__main__':
  
-    consumer_key = 'n9j2KmkV3FFWkzgGeq4XdPWCp'
-    consumer_secret = 'TszufpKDVtR9rkEkfBS8SdljhqMuxO26ohnUqqDjfTNk2xvJrx'
-    access_token = '367437965-UHlGKsxK2WfYNptu2tOPBgT7jxgFvSwJ5fuS59C3'
-    access_token_secret = 'qYJQdSzBfdNMPllmA5jU5xJAuyTGxzEs6G7uKRoENRsSu'
+    consumer_key = 'qW7Kbzq6irlBfbEqZ2eTnymQz'
+    consumer_secret = 'GlwMdGVfQUrmr9Orhe4p884tX00xtCM1cqc4TucNCkjsOrTdQ6'
+    access_token = '607723422-6Q42AAeSabnAL0NJSBddmlcNGOVREe5SW2HGF0N0'
+    access_token_secret = 'l50yzdzWWJ207ti9Bw1U4qir3AZBPKmIvPZCasXyvNFGW'
     output_directory = 'tweetsEn'
     if not os.path.isdir('log'):
         os.makedirs('log')

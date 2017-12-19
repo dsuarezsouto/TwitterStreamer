@@ -15,6 +15,7 @@ class FileListener(StreamListener):
         self.restart_time = restart_time
         self.file_start_time = time.time()
         self.file_start_date = datetime.datetime.now()
+        self.firstTweet = False
 
     # Me llegan los datos de un tweet
     def on_data(self, data):
@@ -30,7 +31,10 @@ class FileListener(StreamListener):
             self.file_start_date = datetime.datetime.now()
         # Escribo los datos en el fichero
         if data.startswith('{'):
+            if not self.firstTweet:
+                self.current_file.write(',')
             self.current_file.write(data)
+            self.firstTweet=False
             if not data.endswith('\n'):
                 self.current_file.write('\n')
 
@@ -44,6 +48,7 @@ class FileListener(StreamListener):
 
     def startFile(self):
         if self.current_file:
+            self.current_file.write(']}')
             self.current_file.close()
 
         local_time_obj = localtime()
@@ -65,7 +70,9 @@ class FileListener(StreamListener):
         filename = os.path.join(full_path, '%s.json' % datetime)
         #self.current_file = gzip.open(filename, 'w')
         self.current_file = open(filename,'w')
+        self.current_file.write('{"tweets":[')
         self.file_start_time = time.time()
+        self.firstTweet=True
         logger.info('Starting new file: %s' % filename)
 
 
@@ -73,10 +80,10 @@ class FileListener(StreamListener):
 # Al lanzarlo como script
 if __name__ == '__main__':
  
-    consumer_key = 'n9j2KmkV3FFWkzgGeq4XdPWCp'
-    consumer_secret = 'TszufpKDVtR9rkEkfBS8SdljhqMuxO26ohnUqqDjfTNk2xvJrx'
-    access_token = '367437965-UHlGKsxK2WfYNptu2tOPBgT7jxgFvSwJ5fuS59C3'
-    access_token_secret = 'qYJQdSzBfdNMPllmA5jU5xJAuyTGxzEs6G7uKRoENRsSu'
+    consumer_key = 'jZ3qkFLhjrhCEwrHg9BAfy8FJ'
+    consumer_secret = '1ZKeJZGpnxOEECLlXkkawi80OqSERktjfek9pqwLDcTDfiWrVh'
+    access_token = '937771079925420034-rICxwy7McBTvZycF427qJmqGLMYPc5Y'
+    access_token_secret = 'P5EFZFPVINSkfX5P7F9jBuu9EHPDRZh1ULYUJvlcHuvfj'
     output_directory = 'tweetsEs'
     if not os.path.isdir('log'):
         os.makedirs('log')
